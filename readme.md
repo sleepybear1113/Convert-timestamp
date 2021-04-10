@@ -4,6 +4,12 @@
 
 源码在 `src` 文件夹中，`img` 文件夹存放部分截图
 
+#### 问题
+
+1. 右键菜单单击无法复制
+2. 请求的权限有点多好像
+3. 用了 content_scripts 实现右键菜单的动态内容，不会别的实现方式
+
 ![avatar](img/img1.jpg)
 
 ![avatar](img/img2.jpg)
