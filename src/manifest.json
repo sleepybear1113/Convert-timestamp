@@ -1,0 +1,30 @@
+{
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "description": "时间戳转换小工具",
+  "manifest_version": 2,
+  "name": "时间戳转化",
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ],
+  "options_page": "popup.html",
+  "version": "1.0.2",
+  "permissions": [
+    "clipboardRead",
+    "contextMenus"
+  ],
+  "background": {
+    "scripts": [
+      "background.js",
+      "utils.js"
+    ]
+  }
+}

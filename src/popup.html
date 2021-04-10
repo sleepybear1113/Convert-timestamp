@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>小工具</title>
+</head>
+<style>
+    body {
+        min-width: 400px;
+    }
+
+    .input {
+        min-width: 190px;
+    }
+
+    #gap {
+        max-width: 40px;
+    }
+
+    #timestamp-now {
+       max-width: 100px;
+    }
+
+    #msg {
+        color: #000000;
+        font-size: xx-small;
+        moz-user-select: -moz-none;
+        -moz-user-select: none;
+        -o-user-select:none;
+        -khtml-user-select:none;
+        -webkit-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
+    }
+</style>
+<body>
+<div>
+    <div class="tab">
+        <div>
+            <div>
+                <label for="timestamp-now">当前的时间戳</label>
+                <input id="timestamp-now" readonly>
+                <button id="copy_timestamp" type="button" class="button">复制</button>
+
+                <label for="gap">刷新间隔</label>
+                <input id="gap" value="1000">
+
+                <label for="goon">实时</label>
+                <input id="goon" type="checkbox" checked>
+            </div>
+
+            <div>
+                <label for="bjTime">当前北京时间</label>
+                <input id="bjTime" class="input" readonly>
+                <button id="copy_time" type="button" class="button">复制</button>
+                <button id="refresh">刷新</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div>
+            <div>
+                <label for="input">输入：</label>
+                <input id="input" class="input" placeholder="[10/13位时间戳]/[年月日时分秒]">
+                <button id="paste" class="button">粘贴</button>
+                <button id="now" class="button">当前时间</button>
+            </div>
+
+            <div>
+                <label for="result">输出：</label>
+                <input id="result" class="input" placeholder="这里是输出的结果" readonly>
+                <button id="copy_result" class="button">复制</button>
+                <button id="change" class="button">转化</button>
+                <button id="clear" class="button">清空</button>
+            </div>
+        </div>
+
+        <div>
+            <span id="tip" style="font-size: xx-small; color: #808080; ">小提示：鼠标滚轮中键点击可以复制或者粘贴，年月日时分秒字符串的分隔符不限</span>
+        </div>
+        <div>
+            <span id="msg">　</span>
+        </div>
+    </div>
+    <script src="utils.js"></script>
+    <script src="scripts.js"></script>
+</div>
+</body>
+</html>
