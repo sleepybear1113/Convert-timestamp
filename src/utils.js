@@ -1,12 +1,25 @@
 /**
  * 时间戳转字符串
  * @param timestamp 10/13 位时间戳
+ * @param type 转换类型
  * @returns {string} 可视化时间字符串
  */
-function getTimeString(timestamp) {
-    if (timestamp.toString().length <= 10) {
-        timestamp *= 1000;
+function getTimeString(timestamp, type) {
+    switch (type) {
+        case "1":
+            timestamp *= 1000;
+            break;
+        case "2":
+            break;
+        case "3":
+        default:
+            if (timestamp.toString().length === 10) {
+                timestamp *= 1000;
+            }
+            break;
     }
+
+
     let date = new Date(timestamp);
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
@@ -66,9 +79,10 @@ function formatTimeString(s) {
 /**
  * 转换数字时间戳或者字符串
  * @param s 输入
+ * @param type 转换类型
  * @returns {string|number} 字符串或者数字时间戳
  */
-function convert(s) {
+function convert(s, type) {
     if (s == null) {
         return "";
     }
@@ -77,7 +91,7 @@ function convert(s) {
     }
 
     if (s.indexOf(".") === -1 && !isNaN(s)) {
-        return getTimeString(parseInt(s));
+        return getTimeString(parseInt(s), type);
     } else {
         return formatTimeString(s);
     }

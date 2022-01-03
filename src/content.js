@@ -3,5 +3,9 @@
  */
 window.onmouseup = function () {
     let selection = window.getSelection();
-    chrome.runtime.sendMessage(selection.toString());
+    if (selection != null) {
+        chrome.runtime.sendMessage(selection.toString());
+    } else {
+        chrome.runtime.sendMessage("");
+    }
 }

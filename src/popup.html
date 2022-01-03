@@ -24,10 +24,7 @@
     #msg {
         color: #000000;
         font-size: xx-small;
-        moz-user-select: -moz-none;
         -moz-user-select: none;
-        -o-user-select:none;
-        -khtml-user-select:none;
         -webkit-user-select:none;
         -ms-user-select:none;
         user-select:none;
@@ -46,7 +43,7 @@
                 <input id="gap" value="1000">
 
                 <label for="goon">实时</label>
-                <input id="goon" type="checkbox" checked>
+                <input id="goon" type="checkbox">
             </div>
 
             <div>
@@ -64,7 +61,8 @@
                 <label for="input">输入：</label>
                 <input id="input" class="input" placeholder="[10/13位时间戳]/[年月日时分秒]">
                 <button id="paste" class="button">粘贴</button>
-                <button id="now" class="button">当前时间</button>
+                <button id="now" class="button">now</button>
+                <button id="exchange-each-other" class="button">交换</button>
             </div>
 
             <div>
@@ -74,6 +72,15 @@
                 <button id="change" class="button">转化</button>
                 <button id="clear" class="button">清空</button>
             </div>
+        </div>
+
+        <div>
+            <label for="show-alert-checkbox">右键菜单单击是否alert</label><input id="show-alert-checkbox" type="checkbox" name="menu-action">
+            <br/>
+            <span >时间戳位数判断：</span>
+            <label for="only-10-radio">仅10位</label><input type="radio" id="only-10-radio" name="timestamp-judge-type">
+            <label for="only-13-radio">丨仅13位</label><input type="radio" id="only-13-radio" name="timestamp-judge-type">
+            <label for="both-10-13-radio">丨10/13位</label><input type="radio" id="both-10-13-radio" name="timestamp-judge-type">
         </div>
 
         <div>
