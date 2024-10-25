@@ -1,97 +1,198 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
-    <title>小工具</title>
+    <title>时间戳转换小工具</title>
 </head>
 <style>
+    /* 全局样式 */
     body {
-        min-width: 400px;
+        font-family: "Microsoft YaHei", "Arial", "Times New Roman", sans-serif;
+        /* 使用现代字体 */
+        background-color: #f7f7f7;
+        /* 浅灰色背景 */
+        color: #333;
+        /* 文字颜色 */
+        margin: 0;
+        /* padding: 0px; */
+        line-height: 1.0;
     }
 
+    /* 容器样式 */
+    .tab {
+        min-width: 450px;
+        height: auto;
+        /* margin: 0 auto; */
+        background: #fff;
+        /* 白色背景 */
+        padding: 10px;
+        border-radius: 2px;
+        /* 圆角边框 */
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* 轻微阴影 */
+    }
+
+    /* 输入框样式 */
     .input {
-        min-width: 190px;
+        width: 220px;
+        padding: 5px;
+        margin-left: 0px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        /* 边框颜色 */
+        border-radius: 4px;
+        /* 圆角 */
+        font-size: 14px;
+        /* 字体大小 */
+        box-sizing: border-box;
+        /* 盒模型 */
+    }
+
+    /* 按钮样式 */
+    .button {
+        padding: 5px;
+        margin-right: 5px;
+        border: none;
+        border-radius: 4px;
+        background-color: #C8C8C8;
+        /* 按钮背景颜色 */
+        color: black;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        /* 过渡效果 */
+    }
+
+    .button:hover {
+        background-color: #356BFD;
+        /* 鼠标悬停时的背景颜色 */
+    }
+
+    /* 复选框和标签样式 */
+    label {
+        /* margin-right: 0px; */
+        margin-bottom: 10px;
+        font-size: 16px;
+        /* 字体大小 */
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        size: 5px;
+        padding: 5px;
+        /* margin-right: 0px; */
+    }
+
+    span {
+        font-size: 16px;
+    }
+
+    /* 提示文本样式 */
+    #tip {
+        color: #666;
+        /* 提示文本颜色 */
+        /* font-style: italic; */
+        /* 斜体 */
+        font-size: 12px;
+        margin-top: 10px;
+    }
+
+    /* 消息文本样式 */
+    #msg {
+        font-size: 14px;
+        /* 字体大小 */
+        color: #d9534f;
+        /* 错误消息颜色 */
     }
 
     #gap {
-        max-width: 40px;
+        max-width: 60px;
     }
 
-    #timestamp-now {
-       max-width: 100px;
-    }
-
-    #msg {
-        color: #000000;
-        font-size: xx-small;
-        -moz-user-select: none;
-        -webkit-user-select:none;
-        -ms-user-select:none;
-        user-select:none;
+    .form-row select {
+        margin-right: 10px;
+        padding: 2px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
     }
 </style>
-<body>
-<div>
-    <div class="tab">
-        <div>
-            <div>
-                <label for="timestamp-now">当前的时间戳</label>
-                <input id="timestamp-now" readonly>
-                <button id="copy_timestamp" type="button" class="button">复制</button>
 
-                <label for="gap">刷新间隔</label>
-                <input id="gap" value="1000">
+<body>
+    <div>
+        <div class="tab">
+            <div>
+                <div>
+                    <label for="timestamp-now">当前的时间戳:</label>
+                    <input id="timestamp-now" class="input" readonly>
+                    <button id="copy_timestamp" type="button" class="button">复制</button>
+                    <button id="refresh" class="button">刷新</button>
+                </div>
+
+                <div>
+                    <label for="bjTime">当前北京时间:</label>
+                    <input id="bjTime" class="input" readonly>
+                    <button id="copy_time" type="button" class="button">复制</button>
+                </div>
+            </div>
+
+
+            <div>
+                <div>
+                    <label for="input">输入:</label>
+                    <input id="input" class="input" placeholder="[10/13位时间戳]/[年月日时分秒]">
+                    <button id="paste" class="button">粘贴</button>
+                    <button id="now" class="button">此时</button>
+                    <button id="exchange-each-other" class="button">交换</button>
+                </div>
+
+                <div>
+                    <label for="result">输出:</label>
+                    <input id="result" class="input" placeholder="这里是转换后的结果" readonly>
+                    <button id="copy_result" class="button">复制</button>
+                    <button id="change" class="button">转换</button>
+                    <button id="clear" class="button">清空</button>
+                </div>
+            </div>
+
+            <div>
+                <label for="show-alert-checkbox" style="line-height: 25px;">右键菜单单击是否alert</label><input
+                    id="show-alert-checkbox" type="checkbox" name="menu-action">
+                <br />
+                <label for="gap" style="line-height: 25px;">刷新间隔</label>
+                <input id="gap" value="1000" type="number" step="100" min="100">
 
                 <label for="goon">实时</label>
                 <input id="goon" type="checkbox">
+                <br />
+                <span style="line-height: 25px;">时间戳位数判断:</span>
+                <label for="only-10-radio">仅10位</label><input type="radio" id="only-10-radio"
+                    name="timestamp-judge-type">
+                <label for="only-13-radio">丨仅13位</label><input type="radio" id="only-13-radio"
+                    name="timestamp-judge-type">
+                <label for="both-10-13-radio">丨10/13位</label><input type="radio" id="both-10-13-radio"
+                    name="timestamp-judge-type">
+            </div>
+            <div class="form-row">
+                <label for="time_format" style="line-height: 25px;">转换时间格式:</label>
+                <select id="time_format">
+                    <option value='yyyy-MM-dd HH:mm:ss' id="datetime">yyyy-MM-dd HH:mm:ss</option>
+                    <option value='yyyy-MM-dd' id="date">yyyy-MM-dd</option>
+                    <option value='yyyyMMdd' id="datekey">yyyyMMdd</option>
+                </select>
             </div>
 
             <div>
-                <label for="bjTime">当前北京时间</label>
-                <input id="bjTime" class="input" readonly>
-                <button id="copy_time" type="button" class="button">复制</button>
-                <button id="refresh">刷新</button>
+                <span id="tip" style="line-height: 25px;">小提示：鼠标滚轮中键点击可以复制或者粘贴，年月日时分秒字符串的分隔符不限</span>
             </div>
-        </div>
-
-        <br>
-
-        <div>
             <div>
-                <label for="input">输入：</label>
-                <input id="input" class="input" placeholder="[10/13位时间戳]/[年月日时分秒]">
-                <button id="paste" class="button">粘贴</button>
-                <button id="now" class="button">now</button>
-                <button id="exchange-each-other" class="button">交换</button>
-            </div>
-
-            <div>
-                <label for="result">输出：</label>
-                <input id="result" class="input" placeholder="这里是输出的结果" readonly>
-                <button id="copy_result" class="button">复制</button>
-                <button id="change" class="button">转化</button>
-                <button id="clear" class="button">清空</button>
+                <span id="msg" style="line-height: 25px;">　</span>
             </div>
         </div>
-
-        <div>
-            <label for="show-alert-checkbox">右键菜单单击是否alert</label><input id="show-alert-checkbox" type="checkbox" name="menu-action">
-            <br/>
-            <span >时间戳位数判断：</span>
-            <label for="only-10-radio">仅10位</label><input type="radio" id="only-10-radio" name="timestamp-judge-type">
-            <label for="only-13-radio">丨仅13位</label><input type="radio" id="only-13-radio" name="timestamp-judge-type">
-            <label for="both-10-13-radio">丨10/13位</label><input type="radio" id="both-10-13-radio" name="timestamp-judge-type">
-        </div>
-
-        <div>
-            <span id="tip" style="font-size: xx-small; color: #808080; ">小提示：鼠标滚轮中键点击可以复制或者粘贴，年月日时分秒字符串的分隔符不限</span>
-        </div>
-        <div>
-            <span id="msg">　</span>
-        </div>
+        <script src="utils.js"></script>
+        <script src="scripts.js"></script>
     </div>
-    <script src="utils.js"></script>
-    <script src="scripts.js"></script>
-</div>
 </body>
+
 </html>

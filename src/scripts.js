@@ -1,7 +1,7 @@
 let now;
 let goStatus = true;
 let interval;
-let gap = 1000;
+let gap = localStorage.getItem("gapValue") === null ? 1000 : localStorage.getItem("gapValue");
 
 let msgSpan = document.getElementById("msg");
 
@@ -11,6 +11,7 @@ let timestampNowInput = document.getElementById("timestamp-now");
 let resultInput = document.getElementById("result");
 let goonCheckBox = document.getElementById("goon");
 let gapInput = document.getElementById("gap");
+gapInput.value = gap;
 
 let refreshButton = document.getElementById("refresh");
 let changeButton = document.getElementById("change");
@@ -27,6 +28,11 @@ let only10Radio = document.getElementById("only-10-radio");
 let only13Radio = document.getElementById("only-13-radio");
 let both10_13 = document.getElementById("both-10-13-radio");
 
+let timeFormatSelected = document.getElementById("time_format");
+
+let datetimeoption = document.getElementById("datetime");
+let dateoption = document.getElementById("date");
+let datekeyoption = document.getElementById("datekey");
 
 function getTimestamp13() {
     return now.getTime();
@@ -98,17 +104,13 @@ inputInput.oninput = function () {
     change();
 };
 
-gapInput.oninput = function () {
+gapInput.addEventListener('change', function (event) {
+    var gapValue = event.target.value;
+    console.log("gapValue:", gapValue);
+    localStorage.setItem("gapValue", gapValue);
     refreshGap();
-};
-
-gapInput.onkeypress = function (e) {
-    refreshGap();
-
-    if (e.keyCode === 13) {
-        refreshWithInterval();
-    }
-};
+    refreshWithInterval();
+});
 
 resultInput.oninput = function () {
     let value = resultInput.value;
@@ -199,6 +201,12 @@ both10_13.onclick = function () {
     localStorage.timestampJudgeType = "3";
 };
 
+timeFormatSelected.addEventListener('change', function (event) {
+    var format = event.target.value;
+    console.log('转换时间格式选中的值:', format);
+    localStorage.setItem("timeFormatSelected", format);
+});
+
 function loadTimestampJudgeType() {
     let timestampJudgeType = localStorage.timestampJudgeType;
     switch (timestampJudgeType) {
@@ -227,6 +235,25 @@ function loadMenuRadioAction() {
     showAlertCheckbox.checked = !(localStorage.showAlert === "false");
 }
 
+function loadTimeFormatSelected() {
+    var timeFormatSelected = localStorage.getItem("timeFormatSelected");
+    console.log("timeFormatSelected:", timeFormatSelected);
+    switch (timeFormatSelected) {
+        case "yyyy-MM-dd HH:mm:ss":
+            datetimeoption.selected = true;
+            break;
+        case "yyyy-MM-dd":
+            dateoption.selected = true;
+            break;
+        case "yyyyMMdd":
+            datekeyoption.selected = true;
+            break;
+        default:
+            datetimeoption.selected = true;
+            break;
+    }
+}
+
 function getInterval() {
     return setInterval(function () {
         if (goStatus) {
@@ -238,10 +265,13 @@ function getInterval() {
 refresh();
 inputInput.focus();
 
-inputInput.value = localStorage.selectText;
+resultInput.value = "";
+inputInput.value = "";
 change();
 
 loadGoonStatus();
+
+loadTimeFormatSelected();
 
 loadMenuRadioAction();
 

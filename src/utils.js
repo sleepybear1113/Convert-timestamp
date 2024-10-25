@@ -28,12 +28,21 @@ function getTimeString(timestamp, type) {
     let minutes = date.getMinutes();
     let seconds = date.getSeconds();
     let milliseconds = date.getMilliseconds();
-
+    month = month < 10 ? "0" + month : month;
+    day = day < 10 ? "0" + day : day;
+    hours = hours < 10 ? "0" + hours : hours;
     minutes = minutes < 10 ? "0" + minutes : minutes;
     seconds = seconds < 10 ? "0" + seconds : seconds;
     milliseconds = milliseconds < 100 ? milliseconds < 10 ? "00" + milliseconds : "0" + milliseconds : milliseconds;
+    let timeFormatSelected = localStorage.getItem("timeFormatSelected");
+    if (timeFormatSelected === null || timeFormatSelected === "yyyy-MM-dd HH:mm:ss") {
+        return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    } else if (timeFormatSelected === "yyyy-MM-dd") {
+        return year + "-" + month + "-" + day;
+    } else if (timeFormatSelected === "yyyyMMdd") {
+        return String(year) + String(month) + String(day);
+    }
 
-    return year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 
 /**
