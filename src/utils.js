@@ -1,10 +1,11 @@
 /**
  * 时间戳转字符串
- * @param timestamp 10/13 位时间戳
- * @param type 转换类型
+ * @param {number} timestamp - 10/13 位时间戳
+ * @param {string} type - 转换类型
  * @returns {string} 可视化时间字符串
  */
 function getTimeString(timestamp, type) {
+    // 根据类型调整时间戳
     switch (type) {
         case "1":
             timestamp *= 1000;
@@ -19,79 +20,92 @@ function getTimeString(timestamp, type) {
             break;
     }
 
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+    const milliseconds = date.getMilliseconds();
 
-    let date = new Date(timestamp);
-    let year = date.getFullYear();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    let hours = date.getHours();
-    let minutes = date.getMinutes();
-    let seconds = date.getSeconds();
-    let milliseconds = date.getMilliseconds();
+    return formatDate(year, month, day, hours, minutes, seconds, milliseconds);
+}
 
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    milliseconds = milliseconds < 100 ? milliseconds < 10 ? "00" + milliseconds : "0" + milliseconds : milliseconds;
+/**
+ * 格式化日期和时间
+ * @param {number} year - 年
+ * @param {number} month - 月
+ * @param {number} day - 日
+ * @param {number} hours - 时
+ * @param {number} minutes - 分
+ * @param {number} seconds - 秒
+ * @param {number} milliseconds - 毫秒
+ * @returns {string} 格式化后的日期时间字符串
+ */
+function formatDate(year, month, day, hours, minutes, seconds, milliseconds) {
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+    const formattedMilliseconds = milliseconds < 100 ?
+        (milliseconds < 10 ? `00${milliseconds}` : `0${milliseconds}`) :
+        milliseconds;
 
-    return year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    return `${year}年${month}月${day}日 ${hours}:${formattedMinutes}:${formattedSeconds}.${formattedMilliseconds}`;
 }
 
 /**
  * 字符串转 13 位时间戳
- * @param s 字符串
+ * @param {string} s - 字符串
  * @returns {number} 13 位时间戳
  */
 function formatTimeString(s) {
-    // 替换非数字为 -
     let value = s.replace(/[^\d]/g, "-").replace(/-+/g, "-");
-    let res = "";
-    // 以 - 分隔
-    let split = value.split("-");
-    // 组装字符串为 xx/xx/xx xx:xx:xx.xxx
-    for (let i = 0; i < split.length; i++) {
-        let item = split[i];
+
+    if (value.startsWith("-")) {
+        value = value.substring(1);
+    }
+    if (value.endsWith("-")) {
+        value = value.slice(0, -1);
+    }
+
+    let result = "";
+    const parts = value.split("-");
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
         if (i === 0) {
-            // 第 1 位: 年
-            res += item;
+            result += part; // 年
         } else if (i <= 2) {
-            // 2-3 位: 月日
-            res += "/" + item;
+            result += `/${part}`; // 月日
         } else if (i === 3) {
-            // 第 4 位: 时
-            res += " " + item;
+            result += ` ${part}`; // 时
         } else if (i <= 5) {
-            // 5-6 位: 分秒
-            res += ":" + item;
+            result += `:${part}`; // 分秒
         } else if (i === 6) {
-            // 第 7 位: 毫秒
-            res += "." + item;
+            result += `.${part}`; // 毫秒
         }
     }
 
-    // 如果最后一位为小数点，那么应该是没有输入毫秒，去掉小数点
-    if (res.endsWith(".")) {
-        res = res.slice(0, value.length - 1);
+    if (result.endsWith(".")) {
+        result = result.slice(0, -1);
     }
-    let date = new Date(res);
+
+    const date = new Date(result);
     return date.getTime();
 }
 
 /**
  * 转换数字时间戳或者字符串
- * @param s 输入
- * @param type 转换类型
+ * @param {string|number} s - 输入
+ * @param {string} type - 转换类型
  * @returns {string|number} 字符串或者数字时间戳
  */
 function convert(s, type) {
-    if (s == null) {
-        return "";
-    }
-    if (s === "") {
+    if (s == null || s === "") {
         return "";
     }
 
     if (s.indexOf(".") === -1 && !isNaN(s)) {
-        return getTimeString(parseInt(s), type);
+        return getTimeString(parseInt(s, 10), type);
     } else {
         return formatTimeString(s);
     }

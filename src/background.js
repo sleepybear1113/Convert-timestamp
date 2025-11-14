@@ -21,3 +21,5 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         "title": convertStr,
     });
 });
+// 此文件在 Manifest V3 中不再需要，因为功能已移至 service-worker.js
+// 保留此文件以保持向后兼容性，但内容已清空

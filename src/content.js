@@ -1,5 +1,5 @@
 /**
- * 发送消息到 background.js
+ * 发送消息到 service worker
  */
 window.onmouseup = function () {
     let selection = window.getSelection();
@@ -9,3 +9,10 @@ window.onmouseup = function () {
         chrome.runtime.sendMessage("");
     }
 }
+
+// 监听来自service worker的消息
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.action === "showAlert") {
+        alert(request.message);
+    }
+});
