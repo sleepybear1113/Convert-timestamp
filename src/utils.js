@@ -1,26 +1,17 @@
 /**
  * 时间戳转字符串
- * @param timestamp 10/13 位时间戳
- * @param type 转换类型
+ * @param timestamp 13 位时间戳
  * @returns {string} 可视化时间字符串
  */
-function getTimeString(timestamp, type) {
-    switch (type) {
-        case "1":
-            timestamp *= 1000;
-            break;
-        case "2":
-            break;
-        case "3":
-        default:
-            if (timestamp.toString().length === 10) {
-                timestamp *= 1000;
-            }
-            break;
+function getTimeString(timestamp) {
+    if (timestamp == null || timestamp === "" || isNaN(Number(timestamp))) {
+        return "";
     }
 
-
-    let date = new Date(timestamp);
+    let date = new Date(Number(timestamp));
+    if (isNaN(date.getTime())) {
+        return "";
+    }
     let year = date.getFullYear();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -36,14 +27,55 @@ function getTimeString(timestamp, type) {
     return year + "年" + month + "月" + day + "日 " + hours + ":" + minutes + ":" + seconds + "." + milliseconds;
 }
 
+function normalizeTimestamp(timestamp, type) {
+    if (timestamp == null) {
+        return null;
+    }
+
+    const value = String(timestamp).trim();
+    if (!/^\d+$/.test(value)) {
+        return null;
+    }
+
+    const numericValue = Number(value);
+    if (!isFinite(numericValue)) {
+        return null;
+    }
+
+    switch (type) {
+        case "1":
+            return numericValue * 1000;
+        case "2":
+            return numericValue;
+        case "3":
+        default:
+            if (value.length === 10) {
+                return numericValue * 1000;
+            }
+            if (value.length === 13) {
+                return numericValue;
+            }
+            return null;
+    }
+}
+
 /**
  * 字符串转 13 位时间戳
  * @param s 字符串
  * @returns {number} 13 位时间戳
  */
 function formatTimeString(s) {
+    if (s == null) {
+        return "";
+    }
+
+    const raw = String(s).trim();
+    if (!raw) {
+        return "";
+    }
+
     // 替换非数字为 -
-    let value = s.replace(/[^\d]/g, "-").replace(/-+/g, "-");
+    let value = raw.replace(/[^\d]/g, "-").replace(/-+/g, "-");
     let res = "";
     // 以 - 分隔
     let split = value.split("-");
@@ -70,10 +102,14 @@ function formatTimeString(s) {
 
     // 如果最后一位为小数点，那么应该是没有输入毫秒，去掉小数点
     if (res.endsWith(".")) {
-        res = res.slice(0, value.length - 1);
+        res = res.slice(0, res.length - 1);
     }
     let date = new Date(res);
-    return date.getTime();
+    let timestamp = date.getTime();
+    if (isNaN(timestamp)) {
+        return "";
+    }
+    return timestamp;
 }
 
 /**
@@ -86,13 +122,16 @@ function convert(s, type) {
     if (s == null) {
         return "";
     }
-    if (s === "") {
+
+    const value = String(s).trim();
+    if (value === "") {
         return "";
     }
 
-    if (s.indexOf(".") === -1 && !isNaN(s)) {
-        return getTimeString(parseInt(s), type);
-    } else {
-        return formatTimeString(s);
+    if (/^\d+$/.test(value)) {
+        const normalized = normalizeTimestamp(value, type);
+        return normalized == null ? "" : getTimeString(normalized);
     }
+
+    return formatTimeString(value);
 }

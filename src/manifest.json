@@ -1,30 +1,37 @@
 {
-  "browser_action": {
+  "manifest_version": 3,
+  "name": "时间戳转化",
+  "description": "时间戳转换小工具。右键菜单显示转化，工具页时间戳转化",
+  "version": "3.0.0",
+  "action": {
     "default_popup": "popup.html"
   },
-  "description": "时间戳转换小工具。右键菜单显示转化，工具页时间戳转化",
-  "manifest_version": 2,
-  "name": "时间戳转化",
+  "options_ui": {
+    "page": "popup.html",
+    "open_in_tab": true
+  },
+  "background": {
+    "service_worker": "sw.js"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "clipboardRead",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
       "matches": [
-        "*://*/*"
+        "<all_urls>"
       ],
       "js": [
+        "config.js",
         "content.js"
-      ]
+      ],
+      "run_at": "document_idle"
     }
-  ],
-  "options_page": "popup.html",
-  "version": "1.0.3",
-  "permissions": [
-    "clipboardRead",
-    "contextMenus"
-  ],
-  "background": {
-    "scripts": [
-      "background.js",
-      "utils.js"
-    ]
-  }
+  ]
 }

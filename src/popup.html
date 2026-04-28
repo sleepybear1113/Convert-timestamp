@@ -40,14 +40,14 @@
                 <button id="copy_timestamp" type="button" class="button">复制</button>
 
                 <label for="gap">刷新间隔</label>
-                <input id="gap" value="1000">
+                <input id="gap" type="number" min="1" step="1" inputmode="numeric" value="1000">
 
                 <label for="goon">实时</label>
                 <input id="goon" type="checkbox">
             </div>
 
             <div>
-                <label for="bjTime">当前北京时间</label>
+                <label for="bjTime">当前本地时间</label>
                 <input id="bjTime" class="input" readonly>
                 <button id="copy_time" type="button" class="button">复制</button>
                 <button id="refresh">刷新</button>
@@ -87,9 +87,10 @@
             <span id="tip" style="font-size: xx-small; color: #808080; ">小提示：鼠标滚轮中键点击可以复制或者粘贴，年月日时分秒字符串的分隔符不限</span>
         </div>
         <div>
-            <span id="msg">　</span>
+            <span id="msg" role="status" aria-live="polite">　</span>
         </div>
     </div>
+    <script src="config.js"></script>
     <script src="utils.js"></script>
     <script src="scripts.js"></script>
 </div>
